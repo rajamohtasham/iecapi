@@ -22,9 +22,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'channels',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
 
     # Local
     'api',
+    'payments'
 ]
 
 ASGI_APPLICATION = "api.asgi.application"
@@ -97,6 +100,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # 🔧 DRF + JWT Settings
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication', # for browsable API login
@@ -122,3 +126,17 @@ CORS_ALLOW_ALL_ORIGINS = True   # for dev only; in prod use whitelist
 # Example: CORS_ALLOWED_ORIGINS = ["https://nexus-iota-five.vercel.app"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Stripe keys
+STRIPE_SECRET_KEY = "sk_test_51S1mBPJz1wMP4h7RZClf0M6MfFMjL8RXcgTB06s25wBnVXXAGNzRESsxpmGkYIkQohMy0NRyUlMDdahElJRYhOo200MOBZrEy0"
+STRIPE_PUBLISHABLE_KEY = "pk_test_51S1mBPJz1wMP4h7RRS5XpVkuSSzn5zabWZz5yBEHZfzx9zfBxPBvxiEFmjm0ECqzPOsgQGvGUZPA8hMjw9gZvJtj00IdoyQd3j"
+
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "IEC API",
+    "DESCRIPTION": "API for IEC Internship Project with Authentication, Meetings (WebRTC), and Payments",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
