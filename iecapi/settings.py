@@ -1,12 +1,17 @@
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 🔐 SECURITY
-SECRET_KEY = 'django-insecure-h_m^romijy+4$4ms3o9gsehrwg7l(2j+b98h*58%ka4$1vh1=('
-DEBUG = True
-ALLOWED_HOSTS = ["*"]   # in production replace with domain/ip
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me")
+DEBUG = os.getenv("DEBUG", "True").lower() in ["true", "1", "yes"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # 🚀 Installed apps
 INSTALLED_APPS = [
@@ -27,7 +32,7 @@ INSTALLED_APPS = [
 
     # Local
     'api',
-    'payments'
+    'payments',
 ]
 
 ASGI_APPLICATION = "api.asgi.application"
@@ -69,7 +74,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'iecapi.wsgi.application'
 
-# 💾 Database (for now SQLite, can switch to PostgreSQL later)
+# 💾 Database (SQLite for dev)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -121,19 +126,19 @@ SIMPLE_JWT = {
 # 🔐 Custom user
 AUTH_USER_MODEL = 'api.User'
 
-# 🌍 CORS (to allow frontend React/Vercel)
-CORS_ALLOW_ALL_ORIGINS = True   # for dev only; in prod use whitelist
-# Example: CORS_ALLOWED_ORIGINS = ["https://nexus-iota-five.vercel.app"]
+# 🌍 CORS
+CORS_ALLOW_ALL_ORIGINS = True   # for dev only
+# For production:
+# CORS_ALLOW_ALL_ORIGINS = False
+# CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# 🌍 Stripe keys (from .env file)
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 
-# Stripe keys
-# STRIPE_SECRET_KEY = "sk_test_51S1mBPJz1wMP4h7RZClf0M6MfFMjL8RXcgTB06s25wBnVXXAGNzRESsxpmGkYIkQohMy0NRyUlMDdahElJRYhOo200MOBZrEy0"
-# STRIPE_PUBLISHABLE_KEY = "pk_test_51S1mBPJz1wMP4h7RRS5XpVkuSSzn5zabWZz5yBEHZfzx9zfBxPBvxiEFmjm0ECqzPOsgQGvGUZPA8hMjw9gZvJtj00IdoyQd3j"
-
-
-
+# 📖 API Docs (drf-spectacular)
 SPECTACULAR_SETTINGS = {
     "TITLE": "IEC API",
     "DESCRIPTION": "API for IEC Internship Project with Authentication, Meetings (WebRTC), and Payments",
